@@ -1,4 +1,4 @@
-import { ADD_FRIEND, ADD_FAV_FRIEND, REMOVE_FAV_FRIEND, DELETE_FRIEND, GET_FRIEND, SHOW_LOADER } from '../constants';
+import { ADD_FRIEND, ADD_FAV_FRIEND, REMOVE_FAV_FRIEND, DELETE_FRIEND, GET_FRIEND, SHOW_LOADER, HIDE_LOADER } from '../constants';
 
 import { addFavFriendHandler, addFriendHandler, delFriendHandler, removeFavFriendHandler } from '../appLogics';
 const initialState = {
@@ -19,10 +19,26 @@ const dummyData = [
         isFavorite: false,
         isDeleted: false,
         gender: 'F'
-    },
-    {
+    }, {
         id: 3,
         name: 'Akash Singh',
+        isFavorite: false,
+        isDeleted: false,
+    },
+    {
+        id: 4,
+        name: 'Vatsal Singh',
+        isFavorite: false,
+        isDeleted: false,
+    },
+    {
+        id: 5,
+        name: 'Vaibhav Singh',
+        isFavorite: false,
+        isDeleted: false,
+    }, {
+        id: 6,
+        name: 'Himanshu Singh',
         isFavorite: false,
         isDeleted: false,
     }
@@ -45,6 +61,8 @@ const friendsReducer = (state = initialState, actions) => {
             return { ...state, showLoader: payload.showLoader, friendsList: addFavFriendHandler([...state.friendsList], payload.addFavFriendsData) };
         case REMOVE_FAV_FRIEND:
             return { ...state, showLoader: payload.showLoader, friendsList: removeFavFriendHandler([...state.friendsList], payload.delFavFriendsData) };
+        case HIDE_LOADER:
+            return { ...state, showLoader: payload.showLoader };
         default:
             return { ...state };
     }

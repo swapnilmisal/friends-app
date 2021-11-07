@@ -6,6 +6,8 @@ import {
 } from "../redux/actions/friendsActions";
 import { connect } from "react-redux";
 
+import css from '../styles/friendsListStyle.module.css';
+
 const AddFriendComponent = (props) => {
   const initialState = "";
   const [name, setName] = useState(initialState);
@@ -16,6 +18,8 @@ const AddFriendComponent = (props) => {
       props.showLoadingActionProps();
       setTimeout(() => {
         props.addFriendsActionProps(name);
+        setName(initialState);
+        inputRef.current.focus();
       }, 200);
     }
   };
@@ -41,6 +45,8 @@ const AddFriendComponent = (props) => {
           onChange={(e) => {
             updateInputFiled(e);
           }}
+          bordered={false}
+          className={css.addFriendInput}
         />
       </form>
     </div>

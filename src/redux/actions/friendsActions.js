@@ -1,4 +1,4 @@
-import { SHOW_LOADER, ADD_FRIEND, ADD_FAV_FRIEND, REMOVE_FAV_FRIEND, DELETE_FRIEND, GET_FRIEND } from '../constants';
+import { SHOW_LOADER, ADD_FRIEND, ADD_FAV_FRIEND, REMOVE_FAV_FRIEND, DELETE_FRIEND, GET_FRIEND, HIDE_LOADER } from '../constants';
 
 const showLoadingAction = () => {
     return {
@@ -57,5 +57,13 @@ const removeFavFriendAction = (friendsData) => {
         }
     }
 }
+const hideLoaderAction = () => {
+    return {
+        type: HIDE_LOADER,
+        payload: {
+            showLoader: false,
+        }
+    }
+}
 
-export { getFriendsAction, addFriendsAction, deleteFriendsAction, addFavFriendAction, removeFavFriendAction, showLoadingAction };
+export { getFriendsAction, addFriendsAction, deleteFriendsAction, addFavFriendAction, removeFavFriendAction, showLoadingAction, hideLoaderAction };

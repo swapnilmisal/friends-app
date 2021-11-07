@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   getFriendsAction,
@@ -6,29 +6,92 @@ import {
   deleteFriendsAction,
   addFavFriendAction,
   removeFavFriendAction,
+  hideLoaderAction,
 } from "../redux/actions/friendsActions";
 
-import { Table } from "antd";
+import { Table, Modal, Button } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import _ from "lodash";
 import { getTableColumns } from "./FriendsColumn";
+import SearchComponent from "./SearchComponent";
+
+const { confirm } = Modal;
 
 const FriendsListComponent = (props) => {
+  const [sorterClicked, setSorterClicked] = useState(false);
+  const {
+    showLoadingActionProps,
+    getFriendsActionProps,
+    friendsList,
+    hideLoaderActionProps,
+    deleteFriendsActionProps,
+  } = props;
+
+  const [searchText, setSearchText] = useState("");
+  const [friendListData, setFriendList] = useState([]);
+
+  const filterData = (value) => {
+    const data = friendsList.filter((el) =>
+      el.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFriendList(data);
+    hideLoaderActionProps();
+  };
+
+  const enhancedSearch = _.debounce(filterData, 300);
+  const onSearchChange = (e) => {
+    setSearchText(e.target.value);
+    showLoadingActionProps();
+    if (e.target.value) {
+      enhancedSearch(e.target.value);
+    }
+  };
+
   useEffect(() => {
     let timer;
-    const loadData = () => {
-      const { showLoadingActionProps, getFriendsActionProps } = props;
-      showLoadingActionProps();
+    if (showLoadingActionProps && getFriendsActionProps) {
       timer = setTimeout(() => {
         getFriendsActionProps();
       }, 200);
-    };
-    loadData();
+    }
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [showLoadingActionProps, getFriendsActionProps]);
+
+  const paginationObject = {
+    total: searchText.length ? friendListData : friendsList.length,
+    defaultCurrent: 1,
+    pageSize: 4,
+    size: "small",
+  };
+  const onChange = (pagination, filters, sorter) => {
+    if (sorter.column) {
+      setSorterClicked(true);
+    } else {
+      setSorterClicked(false);
+    }
+  };
+  const openConfirmationModal = (record) => {
+    confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: `Are you sure, you want to remove ${record.name}?`,
+      onOk() {
+        showLoadingActionProps();
+        deleteFriendsActionProps(record);
+        setTimeout(() => {
+          hideLoaderActionProps();
+        }, 100);
+      },
+      onCancel() {},
+    });
+  };
   return (
     <div>
-      <h1>FriendsListComponent</h1>
+      <SearchComponent
+        searchText={searchText}
+        onSearchChange={onSearchChange}
+      />
       <Table
         rowKey={(record) => {
           return record.id;
@@ -36,12 +99,14 @@ const FriendsListComponent = (props) => {
         columns={getTableColumns(
           props.addFavFriendActionProps,
           props.removeFavFriendActionProps,
-          props.deleteFriendsActionProps
+          openConfirmationModal,
+          sorterClicked
         )}
-        dataSource={props.friendsList}
+        dataSource={searchText ? friendListData : friendsList}
         loading={props.showLoader}
-        showHeader={false}
         width={"50%"}
+        pagination={paginationObject.total > 4 ? paginationObject : false}
+        onChange={onChange}
       />
     </div>
   );
@@ -69,6 +134,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deleteFriendsActionProps: (friendsData) => {
       dispatch(deleteFriendsAction(friendsData));
+    },
+    hideLoaderActionProps: () => {
+      dispatch(hideLoaderAction());
     },
   };
 };
