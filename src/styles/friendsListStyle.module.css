@@ -3,6 +3,11 @@
   padding: 5px 10px;
 }
 .addFriendInput {
+  border: none;
   border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 10px;
 }
 
+.marginTop10 {
+  margin-top: 10px;
+}

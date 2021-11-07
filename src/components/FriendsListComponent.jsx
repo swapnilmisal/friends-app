@@ -9,11 +9,12 @@ import {
   hideLoaderAction,
 } from "../redux/actions/friendsActions";
 
-import { Table, Modal, Button } from "antd";
+import { Table, Modal } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { getTableColumns } from "./FriendsColumn";
 import SearchComponent from "./SearchComponent";
+import css from "../styles/friendsListStyle.module.css";
 
 const { confirm } = Modal;
 
@@ -42,9 +43,7 @@ const FriendsListComponent = (props) => {
   const onSearchChange = (e) => {
     setSearchText(e.target.value);
     showLoadingActionProps();
-    if (e.target.value) {
-      enhancedSearch(e.target.value);
-    }
+    enhancedSearch(e.target.value);
   };
 
   useEffect(() => {
@@ -87,7 +86,7 @@ const FriendsListComponent = (props) => {
     });
   };
   return (
-    <div>
+    <div className={css.marginTop10}>
       <SearchComponent
         searchText={searchText}
         onSearchChange={onSearchChange}

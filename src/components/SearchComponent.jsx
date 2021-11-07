@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-// const { Search } = Input;
+import css from "../styles/friendsListStyle.module.css";
 
 const SearchComponent = (props) => {
   const newInputRef = useRef(null);
@@ -19,6 +19,7 @@ const SearchComponent = (props) => {
         onChange={onSearchChange}
         allowClear
         suffix={<SearchOutlined />}
+        className={css.addFriendInput}
       />
     </div>
   );
